@@ -11,8 +11,8 @@ const Tab = createBottomTabNavigator();
 const BottomTabNavigator = () => {
   return (
     <Tab.Navigator screenOptions={{headerShown: false}}>
-      <Tab.Screen name="Home2" component={MainStackNavigator} />
-      <Tab.Screen name="Contact" component={ContactStackNavigator} />
+      <Tab.Screen name="MonthWise" component={MainStackNavigator} />
+      <Tab.Screen name="Analytics" component={ContactStackNavigator} />
     </Tab.Navigator>
   );
 };
