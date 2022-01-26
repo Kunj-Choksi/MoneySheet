@@ -4,6 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Analytics from '../analytics/Analytics';
 import MonthlyPurchase from '../monthwise/MonthlyPurchase';
 import MonthList from '../monthwise/MonthList';
+import PurchaseAlter from '../monthwise/PurchaseAlter';
 
 const Stack = createStackNavigator();
 
@@ -27,6 +28,11 @@ const MainStackNavigator = () => {
                 name="MonthlyPurchase"
                 component={MonthlyPurchase}
                 options={{title: 'Month Wise Purchase'}}
+            />
+            <Stack.Screen
+                name="AlterPurchase"
+                component={PurchaseAlter}
+                options={{title: 'Alter Purchase'}}
             />
         </Stack.Navigator>
     );

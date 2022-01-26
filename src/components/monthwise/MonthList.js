@@ -4,7 +4,7 @@ import {
     View,
     Button,
     Text,
-    TouchableOpacity,
+    TouchableHighlight,
     StyleSheet,
     FlatList,
 } from 'react-native';
@@ -13,10 +13,14 @@ const MonthList = ({navigation}) => {
     let monthsList = [];
     for (let i = 0; i < 5; i++) {
         monthsList.push({
-            name: moment().subtract(i, 'months').format('MMMM \'YY'),
-            value: moment().subtract(i, 'months'),
+            name: moment().subtract(i, 'months').format("MMMM 'YY"),
+            value: moment().subtract(i, 'months').format('x'),
         });
     }
+
+    const navigateToMonthlyPurchaseList = time => {
+        navigation.navigate('MonthlyPurchase', {period: time.value});
+    };
 
     return (
         <View>
@@ -24,9 +28,14 @@ const MonthList = ({navigation}) => {
                 style={styles.list}
                 data={monthsList}
                 renderItem={({item}) => (
-                    <TouchableOpacity style={styles.listItem}>
+                    <TouchableHighlight
+                        style={styles.listItem}
+                        underlayColor="#e3e3e3"
+                        onPress={() => {
+                            navigateToMonthlyPurchaseList(item);
+                        }}>
                         <Text>{item.name}</Text>
-                    </TouchableOpacity>
+                    </TouchableHighlight>
                 )}
             />
         </View>
@@ -34,10 +43,6 @@ const MonthList = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
-    list: {
-        padding: 10,
-        paddingTop: 0,
-    },
     listItem: {
         padding: 15,
         borderBottomWidth: 2,

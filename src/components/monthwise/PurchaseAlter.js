@@ -2,11 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Text, View, StyleSheet} from 'react-native';
 
-class PurchaseAlter extends React.Component {
-  static propTypes = {};
-  render() {
+const PurchaseAlter = ({navigation, route}) => {
     return <></>;
-  }
-}
+};
 
 export default PurchaseAlter;
