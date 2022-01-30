@@ -15,6 +15,7 @@ const PurchaseList = ({list}) => {
                     {list.map(store => {
                         return (
                             <TouchableHighlight
+                                key={store.id}
                                 onPress={showPurchaseDetails}
                                 underlayColor="#e3e3e3">
                                 <View style={styles.listContainer}>
