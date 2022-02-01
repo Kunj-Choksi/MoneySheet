@@ -1,22 +1,38 @@
-import React, {useEffect, useState} from 'react';
-import {Text, View, TextInput, Button, StyleSheet} from 'react-native';
-import {useForm, Controller} from 'react-hook-form';
+import React, { useEffect, useState } from 'react';
+import { Text, View, TextInput, Button, StyleSheet } from 'react-native';
+
+import { useForm, Controller } from 'react-hook-form';
+import { Picker } from '@react-native-picker/picker';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
 import globalStyles from '../../assets/stylesheet/global';
 
 import ajax from '../../helpers/ajax';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+
+const schema = yup.object().shape({
+    storeId: yup.number().required(),
+    expenseAmount: yup.number().required(),
+    date: yup.date().required(),
+    type: yup.number().required(),
+});
+
+const defaultValues = {
+    storeId: null,
+    expenseAmount: 0,
+    date: new Date(),
+    type: 0,
+};
 
 export default function PurchaseAlter() {
     const [stores, setStores] = useState([]);
-    const {
-        control,
-        handleSubmit,
-        formState: {errors},
-    } = useForm({
-        defaultValues: {
-            firstName: '',
-            lastName: '',
-        },
-    });
+    const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
+
+    const { control, handleSubmit, errors, setValue, getValues, onChange } =
+        useForm({
+            resolver: yupResolver(schema),
+        });
 
     useEffect(() => {
         const getStores = () => {
@@ -32,49 +48,132 @@ export default function PurchaseAlter() {
 
     return (
         <View style={globalStyles.container}>
+            {/* Store Id */}
             <View style={globalStyles.marB20}>
                 <Controller
                     control={control}
-                    rules={{
-                        required: true,
-                    }}
-                    render={({field: {onChange, onBlur, value}}) => (
-                        <TextInput
-                            style={[globalStyles.inputText]}
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value}
-                            placeholder="Search for store.."
-                            accessibilityHint="Search for store.."
-                        />
+                    name="storeId"
+                    defaultValue={defaultValues.storeId}
+                    render={({ value }) => (
+                        <View>
+                            <Picker
+                                selectedValue={value}
+                                onValueChange={itemValue =>
+                                    setValue('storeId', itemValue, true)
+                                }>
+                                {stores.map(store => {
+                                    return (
+                                        <Picker.Item
+                                            key={store.id}
+                                            label={store.name}
+                                            value={store.id}
+                                        />
+                                    );
+                                })}
+                            </Picker>
+                        </View>
                     )}
-                    name="firstName"
                 />
-                {errors.firstName && <Text>This is required.</Text>}
+                {errors?.storeId?.message && (
+                    <Text style={styles.error}>{errors.storeId.message}</Text>
+                )}
             </View>
+            {/* Expense amount */}
             <View style={globalStyles.marB20}>
                 <Controller
                     control={control}
-                    rules={{
-                        maxLength: 100,
-                    }}
-                    render={({field: {onChange, onBlur, value}}) => (
+                    name="expenseAmount"
+                    defaultValue={defaultValues.expenseAmount}
+                    render={({ value }) => (
                         <TextInput
                             placeholder="Expense amount"
                             keyboardType="numeric"
-                            style={[
-                                globalStyles.inputText,
-                                globalStyles.marB20,
-                            ]}
-                            onBlur={onBlur}
-                            onChangeText={onChange}
+                            onChangeText={text => {
+                                setValue('expenseAmount', text, true);
+                            }}
+                            style={globalStyles.inputText}
                             value={value}
                         />
                     )}
-                    name="lastName"
                 />
-
-                <Button title="Submit" onPress={handleSubmit(onSubmit)} />
+                {errors?.expenseAmount?.message && (
+                    <Text>{errors.expenseAmount.message}</Text>
+                )}
+            </View>
+            {/* Expense date select text */}
+            <View style={globalStyles.marB20}>
+                <Text
+                    onPress={() => {
+                        setIsDatePickerVisible(!isDatePickerVisible);
+                    }}>
+                    Select Expense Date
+                </Text>
+            </View>
+            {/* Expense date selector */}
+            <View style={globalStyles.marB20}>
+                <Controller
+                    control={control}
+                    name="date"
+                    defaultValue={defaultValues.date}
+                    render={({ value }) => (
+                        <View>
+                            <DateTimePickerModal
+                                isVisible={isDatePickerVisible}
+                                mode="date"
+                                onConfirm={date => {
+                                    console.log(date);
+                                    setValue('date', date, true);
+                                    setIsDatePickerVisible(
+                                        !isDatePickerVisible,
+                                    );
+                                }}
+                                onCancel={() => {
+                                    setIsDatePickerVisible(
+                                        !isDatePickerVisible,
+                                    );
+                                }}
+                            />
+                        </View>
+                    )}
+                />
+                {errors?.date?.message && (
+                    <Text style={styles.error}>{errors.date.message}</Text>
+                )}
+            </View>
+            {/* Expense type */}
+            <View style={globalStyles.marB20}>
+                <Controller
+                    control={control}
+                    name="type"
+                    defaultValue={defaultValues.type}
+                    render={({ value }) => (
+                        <View>
+                            <Picker
+                                selectedValue={value}
+                                onValueChange={itemValue =>
+                                    setValue('type', itemValue, true)
+                                }>
+                                <Picker.Item
+                                    key={0}
+                                    label="Expense"
+                                    value={0}
+                                />
+                                <Picker.Item key={1} label="Income" value={1} />
+                            </Picker>
+                        </View>
+                    )}
+                />
+                {errors?.type?.message && (
+                    <Text style={styles.error}>{errors.type.message}</Text>
+                )}
+            </View>
+            {/* Footer button */}
+            <View style={styles.bottomStyle}>
+                <Button
+                    color="orange"
+                    title="Submit"
+                    onPress={handleSubmit(onSubmit)}
+                />
             </View>
         </View>
     );
