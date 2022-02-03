@@ -3,13 +3,14 @@ import { Text, View, TextInput, Button, StyleSheet } from 'react-native';
 
 import { useForm, Controller } from 'react-hook-form';
 import { Picker } from '@react-native-picker/picker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import Toast from 'react-native-toast-message';
 
 import globalStyles from '../../assets/stylesheet/global';
 
 import ajax from '../../helpers/ajax';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 const schema = yup.object().shape({
     storeId: yup.number().required(),
@@ -25,7 +26,7 @@ const defaultValues = {
     type: 0,
 };
 
-export default function PurchaseAlter() {
+export default function PurchaseAlter({ navigation }) {
     const [stores, setStores] = useState([]);
     const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
 
@@ -44,7 +45,22 @@ export default function PurchaseAlter() {
         getStores();
     }, []);
 
-    const onSubmit = data => console.log(data);
+    const onSubmit = data => {
+        ajax.addNewTransaction(
+            data.storeId,
+            data.expenseAmount,
+            data.date,
+            data.type,
+        ).then(data => {
+            //FIXME check toast
+            Toast.show({
+                type: 'success',
+                text1: 'Done Sire!!',
+                text2: data.message,
+            });
+            navigation.navigate('MonthlyPurchase');
+        });
+    };
 
     return (
         <View style={globalStyles.container}>
@@ -121,7 +137,6 @@ export default function PurchaseAlter() {
                                 isVisible={isDatePickerVisible}
                                 mode="date"
                                 onConfirm={date => {
-                                    console.log(date);
                                     setValue('date', date, true);
                                     setIsDatePickerVisible(
                                         !isDatePickerVisible,

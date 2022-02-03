@@ -13,4 +13,14 @@ export default {
             console.error('myError', error.message);
         }
     },
+    async addNewTransaction(storeId, amount, dateTime, purchaseType) {
+        const res = await axios.post(`${apiHost}/transaction/add_transaction`, {
+            store_id: storeId,
+            amount: amount,
+            datetime: dateTime,
+            purchase_type: purchaseType,
+        });
+
+        return res.data;
+    },
 };
