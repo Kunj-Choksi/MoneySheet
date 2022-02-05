@@ -8,17 +8,18 @@ import ajax from '../../helpers/ajax';
 import PurchaseList from './purchase/PurchaseList';
 
 const MonthlyPurchase = ({ navigation, route }) => {
-    const period = moment(route.params.period, 'x').format('MMM');
+    const periodMonth = moment(route.params.period, 'x').format('MMM');
+    const periodYear = moment(route.params.period, 'x').format('YYYY');
 
     const [transactions, setTransactions] = useState([]);
 
     const navigateToPurchaseAlter = () => {
-        navigation.navigate('AlterPurchase');
+        navigation.navigate('MonthList');
     };
 
     useEffect(() => {
         const getTransactions = () => {
-            ajax.getTransactions(period).then(data => {
+            ajax.getTransactions(periodMonth, periodYear).then(data => {
                 setTransactions(data.contents);
             });
         };

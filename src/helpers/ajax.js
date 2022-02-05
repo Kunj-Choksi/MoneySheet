@@ -13,12 +13,15 @@ export default {
             console.error('myError', error.message);
         }
     },
-    async getTransactions(period) {
+    async getTransactions(periodMonth, periodYear) {
         try {
             const res = await axios.get(
                 `${apiHost}/transaction/retrieve_transactions`,
                 {
-                    params: { period: period },
+                    params: {
+                        periodMonth: periodMonth,
+                        periodYear: periodYear,
+                    },
                 },
             );
 
