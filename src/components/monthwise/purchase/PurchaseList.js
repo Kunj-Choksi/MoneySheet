@@ -1,57 +1,73 @@
-import React, {useEffect, useState} from 'react';
-import {ScrollView} from 'react-native-gesture-handler';
+import React, { useEffect, useState } from 'react';
+import { ScrollView } from 'react-native-gesture-handler';
 import globalStyles from '../../../assets/stylesheet/global';
 
-import {Text, View, StyleSheet, Image, TouchableHighlight} from 'react-native';
+import {
+    Text,
+    View,
+    StyleSheet,
+    Image,
+    TouchableHighlight,
+} from 'react-native';
+import moment from 'moment';
 
-const PurchaseList = ({list}) => {
-    // TODO show model for purchase details
-    const showPurchaseDetails = () => {};
+const PurchaseList = ({ transactions }) => {
+    console.log(transactions);
+    // TODO show model for transaction details
+    const showTransactionDetails = () => {};
 
     return (
         <>
-            <View style={{flex: 1}}>
+            <View style={{ flex: 1 }}>
                 <ScrollView>
-                    {list.map(store => {
-                        return (
-                            <TouchableHighlight
-                                key={store.id}
-                                onPress={showPurchaseDetails}
-                                underlayColor="#e3e3e3">
-                                <View style={styles.listContainer}>
-                                    <View style={styles.itemImage}>
-                                        <Image
-                                            style={styles.imageLogo}
-                                            source={{uri: store.logo_url}}
-                                        />
-                                    </View>
-                                    <View style={styles.itemInfo}>
-                                        <View style={styles.itemInfoRow}>
-                                            <Text
-                                                style={[
-                                                    styles.itemTitle,
-                                                    globalStyles.textBold,
-                                                ]}>
-                                                {store.name}
-                                            </Text>
-                                            <Text
-                                                style={globalStyles.textDanger}>
-                                                $ -34.5
-                                            </Text>
+                    {transactions &&
+                        transactions.map(transaction => {
+                            return (
+                                <TouchableHighlight
+                                    key={transaction.id}
+                                    onPress={showTransactionDetails}
+                                    underlayColor="#e3e3e3">
+                                    <View style={styles.listContainer}>
+                                        <View style={styles.itemImage}>
+                                            <Image
+                                                style={styles.imageLogo}
+                                                source={{
+                                                    uri: transaction.store
+                                                        .logo_url,
+                                                }}
+                                            />
                                         </View>
-                                        <View>
-                                            <Text
-                                                style={
-                                                    globalStyles.textSemiBold
-                                                }>
-                                                On 10th Jan, 2021
-                                            </Text>
+                                        <View style={styles.itemInfo}>
+                                            <View style={styles.itemInfoRow}>
+                                                <Text
+                                                    style={[
+                                                        styles.itemTitle,
+                                                        globalStyles.textBold,
+                                                    ]}>
+                                                    {transaction.store.name}
+                                                </Text>
+                                                <Text
+                                                    style={
+                                                        globalStyles.textDanger
+                                                    }>
+                                                    CA $ {transaction.amount}
+                                                </Text>
+                                            </View>
+                                            <View>
+                                                <Text
+                                                    style={
+                                                        globalStyles.textSemiBold
+                                                    }>
+                                                    {moment(
+                                                        transaction.datetime,
+                                                    ).format('ddd, DD MMM')}
+                                                </Text>
+                                            </View>
                                         </View>
                                     </View>
-                                </View>
-                            </TouchableHighlight>
-                        );
-                    })}
+                                </TouchableHighlight>
+                            );
+                        })}
                 </ScrollView>
             </View>
         </>

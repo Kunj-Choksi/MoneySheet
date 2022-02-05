@@ -13,6 +13,17 @@ export default {
             console.error('myError', error.message);
         }
     },
+    async getTransactions() {
+        try {
+            const res = await axios.get(
+                `${apiHost}/transaction/retrieve_transactions`,
+            );
+
+            return res.data;
+        } catch (error) {
+            console.error('myError', error.message);
+        }
+    },
     async addNewTransaction(storeId, amount, dateTime, purchaseType) {
         const res = await axios.post(`${apiHost}/transaction/add_transaction`, {
             store_id: storeId,
