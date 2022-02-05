@@ -1,10 +1,10 @@
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 
 import Analytics from '../analytics/Analytics';
-import MonthlyPurchase from '../monthwise/MonthlyPurchase';
-import MonthList from '../monthwise/MonthList';
-import PurchaseAlter from '../monthwise/PurchaseAlter';
+import MonthlyPurchase from '../home/purchase/MonthlyPurchase';
+import Home from '../home/Home';
+import PurchaseAlter from '../home/alter/PurchaseAlter';
 
 const Stack = createStackNavigator();
 
@@ -20,19 +20,28 @@ const MainStackNavigator = () => {
     return (
         <Stack.Navigator screenOptions={screenOptionStyle}>
             <Stack.Screen
-                name="MonthList"
-                component={MonthList}
-                options={{title: 'Month List'}}
+                name="Home"
+                component={Home}
+                options={{
+                    title: 'Welcome Aboard',
+                    headerTitleAlign: 'center',
+                }}
             />
             <Stack.Screen
                 name="MonthlyPurchase"
                 component={MonthlyPurchase}
-                options={{title: 'Month Wise Purchase'}}
+                options={({ route }) => ({
+                    title: `${route.params.title}`,
+                    headerTitleAlign: 'center',
+                })}
             />
             <Stack.Screen
                 name="AlterPurchase"
                 component={PurchaseAlter}
-                options={{title: 'Alter Purchase'}}
+                options={{
+                    title: 'Alter Purchase',
+                    headerTitleAlign: 'center',
+                }}
             />
         </Stack.Navigator>
     );
@@ -46,4 +55,4 @@ const ContactStackNavigator = () => {
     );
 };
 
-export {MainStackNavigator, ContactStackNavigator};
+export { MainStackNavigator, ContactStackNavigator };

@@ -8,9 +8,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Toast from 'react-native-toast-message';
 
-import globalStyles from '../../assets/stylesheet/global';
+import globalStyles from '../../../assets/stylesheet/global';
 
-import ajax from '../../helpers/ajax';
+import ajax from '../../../helpers/ajax';
 
 const schema = yup.object().shape({
     storeId: yup.number().required(),
@@ -58,7 +58,7 @@ export default function PurchaseAlter({ navigation }) {
                 text1: 'Done Sire!!',
                 text2: data.message,
             });
-            navigation.navigate('MonthList');
+            navigation.navigate('Home');
         });
     };
 
