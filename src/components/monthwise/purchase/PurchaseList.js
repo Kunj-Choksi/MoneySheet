@@ -12,7 +12,6 @@ import {
 import moment from 'moment';
 
 const PurchaseList = ({ transactions }) => {
-    console.log(transactions);
     // TODO show model for transaction details
     const showTransactionDetails = () => {};
 

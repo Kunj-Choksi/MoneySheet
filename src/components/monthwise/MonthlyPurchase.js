@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 
 import { View } from 'react-native';
+import moment from 'moment';
+import ActionButton from 'react-native-action-button';
 
 import ajax from '../../helpers/ajax';
 import PurchaseList from './purchase/PurchaseList';
 
-import ActionButton from 'react-native-action-button';
-
 const MonthlyPurchase = ({ navigation, route }) => {
+    const period = moment(route.params.period, 'x').format('MMM');
+
     const [transactions, setTransactions] = useState([]);
 
     const navigateToPurchaseAlter = () => {
@@ -16,8 +18,7 @@ const MonthlyPurchase = ({ navigation, route }) => {
 
     useEffect(() => {
         const getTransactions = () => {
-            ajax.getTransactions().then(data => {
-                console.log(data);
+            ajax.getTransactions(period).then(data => {
                 setTransactions(data.contents);
             });
         };

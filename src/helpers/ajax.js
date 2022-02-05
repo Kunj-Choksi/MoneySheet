@@ -13,10 +13,13 @@ export default {
             console.error('myError', error.message);
         }
     },
-    async getTransactions() {
+    async getTransactions(period) {
         try {
             const res = await axios.get(
                 `${apiHost}/transaction/retrieve_transactions`,
+                {
+                    params: { period: period },
+                },
             );
 
             return res.data;
