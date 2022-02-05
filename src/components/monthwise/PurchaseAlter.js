@@ -58,7 +58,7 @@ export default function PurchaseAlter({ navigation }) {
                 text1: 'Done Sire!!',
                 text2: data.message,
             });
-            navigation.navigate('MonthlyPurchase');
+            navigation.navigate('MonthList');
         });
     };
 

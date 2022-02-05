@@ -14,7 +14,7 @@ const MonthlyPurchase = ({ navigation, route }) => {
     const [transactions, setTransactions] = useState([]);
 
     const navigateToPurchaseAlter = () => {
-        navigation.navigate('MonthList');
+        navigation.navigate('AlterPurchase');
     };
 
     useEffect(() => {
