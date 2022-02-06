@@ -1,6 +1,9 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 const globalStyles = StyleSheet.create({
+    flex1: {
+        flex: 1,
+    },
     container: {
         flex: 1,
         padding: 20,
@@ -19,7 +22,7 @@ const globalStyles = StyleSheet.create({
         borderColor: '#d3d3d3',
         borderRadius: 10,
         padding: 15,
-        fontSize: 15
+        fontSize: 15,
     },
     marB20: {
         marginBottom: 20,
