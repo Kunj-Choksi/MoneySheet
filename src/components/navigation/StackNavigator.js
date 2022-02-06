@@ -1,10 +1,10 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import Analytics from '../analytics/Analytics';
 import MonthlyPurchase from '../home/purchase/MonthlyPurchase';
 import Home from '../home/Home';
 import PurchaseAlter from '../home/alter/PurchaseAlter';
+import Summery from '../analytics/Summery';
 
 const Stack = createStackNavigator();
 
@@ -16,7 +16,7 @@ const screenOptionStyle = {
     headerBackTitle: 'Back',
 };
 
-const MainStackNavigator = () => {
+const HomeStackNavigator = () => {
     return (
         <Stack.Navigator screenOptions={screenOptionStyle}>
             <Stack.Screen
@@ -39,7 +39,7 @@ const MainStackNavigator = () => {
                 name="AlterPurchase"
                 component={PurchaseAlter}
                 options={{
-                    title: 'Alter Purchase',
+                    title: 'Modify Purchase',
                     headerTitleAlign: 'center',
                 }}
             />
@@ -47,12 +47,19 @@ const MainStackNavigator = () => {
     );
 };
 
-const ContactStackNavigator = () => {
+const SummeryStackNavigator = () => {
     return (
         <Stack.Navigator screenOptions={screenOptionStyle}>
-            <Stack.Screen name="Analytics" component={Analytics} />
+            <Stack.Screen
+                name="Summery"
+                component={Summery}
+                options={{
+                    title: 'Welcome Aboard Sire!',
+                    headerTitleAlign: 'center',
+                }}
+            />
         </Stack.Navigator>
     );
 };
 
-export { MainStackNavigator, ContactStackNavigator };
+export { HomeStackNavigator, SummeryStackNavigator };
