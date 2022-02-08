@@ -1,5 +1,5 @@
-import moment, { months } from 'moment';
 import React from 'react';
+import moment from 'moment';
 import {
     View,
     Button,
@@ -24,7 +24,10 @@ const Home = ({ navigation }) => {
     }
 
     const navigateToMonthlyPurchaseList = time => {
-        navigation.navigate('MonthlyPurchase', { period: time.value, title: time.name });
+        navigation.navigate('MonthlyPurchase', {
+            period: time.value,
+            title: time.name,
+        });
     };
 
     return (

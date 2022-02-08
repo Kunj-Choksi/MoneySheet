@@ -5,6 +5,7 @@ import MonthlyPurchase from '../home/purchase/MonthlyPurchase';
 import Home from '../home/Home';
 import PurchaseAlter from '../home/alter/PurchaseAlter';
 import Summery from '../analytics/Summery';
+import Login from '../user/Login';
 
 const Stack = createStackNavigator();
 
@@ -62,4 +63,12 @@ const SummeryStackNavigator = () => {
     );
 };
 
-export { HomeStackNavigator, SummeryStackNavigator };
+const LoginStackNavigator = () => {
+    return (
+        <Stack.Navigator screenOptions={screenOptionStyle}>
+            <Stack.Screen name="Login" component={Login} />
+        </Stack.Navigator>
+    );
+};
+
+export { HomeStackNavigator, SummeryStackNavigator, LoginStackNavigator };

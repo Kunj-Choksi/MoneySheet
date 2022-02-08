@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "979184222974",
+    "project_id": "moneysheet-34fa3",
+    "storage_bucket": "moneysheet-34fa3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:979184222974:android:89f723abdbf89007ebdbaf",
+        "android_client_info": {
+          "package_name": "com.moneysheet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "979184222974-7m0a2ns65f4jgtlcqsqbol0ap8f5hgvq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.moneysheet",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "979184222974-a5tfo1suaau53bvgdi3c6gptph9a46cp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChkJRx7V4I9OVQ-wTLAx4-fdPfwjizXEU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "979184222974-a5tfo1suaau53bvgdi3c6gptph9a46cp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
