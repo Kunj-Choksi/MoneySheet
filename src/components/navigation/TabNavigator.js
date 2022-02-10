@@ -12,7 +12,7 @@ const BottomTabNavigator = () => {
     return (
         <Tab.Navigator defaultScreenOptions="Summery" screenOptions={{ headerShown: false }}>
             <Tab.Screen name="Summary" component={SummeryStackNavigator} />
-            <Tab.Screen name="Home" component={HomeStackNavigator} />
+            <Tab.Screen name="Landing" component={HomeStackNavigator} />
         </Tab.Navigator>
     );
 };

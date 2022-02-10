@@ -1,12 +1,11 @@
 import axios from 'axios';
-
-const apiHost = 'http://localhost:3000';
+import { API_HOST } from '@env';
 
 export default {
     async getStoreDetails() {
         try {
             const res = await axios.get(
-                `${apiHost}/transaction/retrieve_stores`,
+                `${API_HOST}/transaction/retrieve_stores`,
             );
             return res.data;
         } catch (error) {
@@ -16,7 +15,7 @@ export default {
     async getTransactions(periodMonth, periodYear) {
         try {
             const res = await axios.get(
-                `${apiHost}/transaction/retrieve_transactions`,
+                `${API_HOST}/transaction/retrieve_transactions`,
                 {
                     params: {
                         periodMonth: periodMonth,
@@ -31,13 +30,28 @@ export default {
         }
     },
     async addNewTransaction(storeId, amount, dateTime, purchaseType) {
-        const res = await axios.post(`${apiHost}/transaction/add_transaction`, {
-            store_id: storeId,
-            amount: amount,
-            datetime: dateTime,
-            purchase_type: purchaseType,
-        });
+        const res = await axios.post(
+            `${API_HOST}/transaction/add_transaction`,
+            {
+                store_id: storeId,
+                amount: amount,
+                datetime: dateTime,
+                purchase_type: purchaseType,
+            },
+        );
 
         return res.data;
+    },
+    async registerUser(userObj) {
+        try {
+            const res = await axios.post(
+                `${API_HOST}/user/register_user`,
+                userObj,
+            );
+
+            return res.data;
+        } catch (error) {
+            console.log(error);
+        }
     },
 };

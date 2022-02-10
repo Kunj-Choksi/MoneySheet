@@ -6,6 +6,7 @@ import Home from '../home/Home';
 import PurchaseAlter from '../home/alter/PurchaseAlter';
 import Summery from '../analytics/Summery';
 import Login from '../user/Login';
+import BottomTabNavigator from './TabNavigator';
 
 const Stack = createStackNavigator();
 
@@ -15,6 +16,23 @@ const screenOptionStyle = {
     },
     headerTintColor: 'white',
     headerBackTitle: 'Back',
+};
+
+const LoginStackNavigator = () => {
+    return (
+        <Stack.Navigator>
+            <Stack.Screen
+                options={{ headerShown: false }}
+                name="Login"
+                component={Login}
+            />
+            <Stack.Screen
+                options={{ headerShown: false }}
+                name="Dashboard"
+                component={BottomTabNavigator}
+            />
+        </Stack.Navigator>
+    );
 };
 
 const HomeStackNavigator = () => {
@@ -50,7 +68,8 @@ const HomeStackNavigator = () => {
 
 const SummeryStackNavigator = () => {
     return (
-        <Stack.Navigator screenOptions={screenOptionStyle}>
+        <Stack.Navigator
+            screenOptions={{ ...screenOptionStyle, headerLeft: false }}>
             <Stack.Screen
                 name="Summery"
                 component={Summery}
@@ -59,14 +78,6 @@ const SummeryStackNavigator = () => {
                     headerTitleAlign: 'center',
                 }}
             />
-        </Stack.Navigator>
-    );
-};
-
-const LoginStackNavigator = () => {
-    return (
-        <Stack.Navigator screenOptions={screenOptionStyle}>
-            <Stack.Screen name="Login" component={Login} />
         </Stack.Navigator>
     );
 };

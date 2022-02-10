@@ -1,8 +1,11 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, BackHandler } from 'react-native';
 import globalStyles from '../../assets/stylesheet/global';
 
-const Summery = () => {
+const Summery = ({ navigation }) => {
+    navigation.addListener('beforeRemove', e => {
+        BackHandler.exitApp();
+    });
     return (
         <View style={globalStyles.flex1}>
             <View style={[styles.header, globalStyles.textAlignCenter]}>

@@ -1,0 +1,38 @@
+// example user response from Google 
+
+{
+    "additionalUserInfo": {
+        "isNewUser": false,
+        "profile": {
+            "aud": "979184222974-a5tfo1suaau53bvgdi3c6gptph9a46cp.apps.googleusercontent.com",
+            "azp": "979184222974-7m0a2ns65f4jgtlcqsqbol0ap8f5hgvq.apps.googleusercontent.com",
+            "email": "kunj07choksi@gmail.com",
+            "email_verified": true,
+            "exp": 1644504834,
+            "family_name": "Choksi",
+            "given_name": "Kunj",
+            "iat": 1644501234,
+            "iss": "https://accounts.google.com",
+            "locale": "en",
+            "name": "Kunj Choksi",
+            "picture": "https://lh3.googleusercontent.com/a/AATXAJwCa2PVrakZlf9oxDsGBGUAkmeBLKZXFJBmT2GC=s96-c",
+            "sub": "103981807136789854247"
+        },
+        "providerId": "google.com"
+    },
+    "user": {
+        "displayName": "Kunj Choksi",
+        "email": "kunj07choksi@gmail.com",
+        "emailVerified": true,
+        "isAnonymous": false,
+        "metadata": [Object
+        ],
+        "phoneNumber": null,
+        "photoURL": "https://lh3.googleusercontent.com/a/AATXAJwCa2PVrakZlf9oxDsGBGUAkmeBLKZXFJBmT2GC=s96-c",
+        "providerData": [Array
+        ],
+        "providerId": "firebase",
+        "tenantId": null,
+        "uid": "bUsjDTtJTJaWuOuGKdyXwXRrMZq1"
+    }
+}
