@@ -8,14 +8,13 @@ import {
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { GOOGLE_WEB_CLIENT_TOKEN } from '@env';
 
 import globalStyles from '../../assets/stylesheet/global';
 
 const Login = () => {
-    //
     GoogleSignin.configure({
-        webClientId:
-            '979184222974-a5tfo1suaau53bvgdi3c6gptph9a46cp.apps.googleusercontent.com',
+        webClientId: GOOGLE_WEB_CLIENT_TOKEN,
     });
 
     async function getLogin() {
