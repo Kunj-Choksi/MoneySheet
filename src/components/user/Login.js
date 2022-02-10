@@ -8,25 +8,21 @@ import {
     ToastAndroid,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
+
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { GOOGLE_WEB_CLIENT_TOKEN } from '@env';
-import MMKVStorage from 'react-native-mmkv-storage';
 
 import ajax from '../../helpers/ajax';
 import globalStyles from '../../assets/stylesheet/global';
 import { STORAGE } from '../../helpers/Global';
 
-const MMKV = new MMKVStorage.Loader().initialize();
+import storageManager from '../../helpers/mmkv-storage';
 
 const Login = ({ navigation }) => {
-    const storedUser = MMKV.getMap(STORAGE.USER);
+    const storedUser = storageManager.getMap(STORAGE.USER);
     if (storedUser) {
         ToastAndroid.show(`Signed as ${storedUser.name}`, ToastAndroid.LONG);
         navigation.navigate('Dashboard');
     }
-    GoogleSignin.configure({
-        webClientId: GOOGLE_WEB_CLIENT_TOKEN,
-    });
 
     async function getLogin() {
         try {
@@ -46,7 +42,8 @@ const Login = ({ navigation }) => {
                         name: res.user.displayName,
                         photoURL: res.user.photoURL,
                     };
-                    MMKV.setMap(STORAGE.USER, userObj);
+                    ToastAndroid.show(`Signed as ${res.user.displayName}`, ToastAndroid.LONG);
+                    storageManager.setMap(STORAGE.USER, userObj);
                     ajax.registerUser(userObj);
                     navigation.navigate('Dashboard');
                 });
