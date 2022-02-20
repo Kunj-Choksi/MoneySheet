@@ -12,8 +12,24 @@ import globalStyles from '../../assets/stylesheet/global';
 import ajax from '../../helpers/ajax';
 import { STORAGE } from '../../helpers/Global';
 import storageManager from '../../helpers/mmkv-storage';
+import PurchaseItem from '../home/purchase/PurchaseItem';
 
 const Summery = ({ navigation }) => {
+    const accordionItems = [
+        {
+            title: 'This Week',
+            key: 'this_week',
+        },
+        {
+            title: 'This Month',
+            key: 'this_month',
+        },
+        {
+            title: 'Overall',
+            key: 'overall',
+        },
+    ];
+    console.log(accordionItems);
     navigation.addListener('beforeRemove', e => {
         BackHandler.exitApp();
     });
@@ -53,106 +69,32 @@ const Summery = ({ navigation }) => {
                         </Surface>
                     </View>
                     <List.Section>
-                        <List.Accordion
-                            title="This week"
-                            left={props => (
-                                <List.Icon {...props} icon="folder" />
-                            )}>
-                            {transactions &&
-                                transactions['this_week'] &&
-                                transactions['this_week'].map(transaction => {
-                                    return (
-                                        <List.Item
-                                            key={transaction.id}
-                                            title={
-                                                <View
-                                                    style={{
-                                                        width: 300,
-                                                        flexDirection: 'row',
-                                                        alignItems: 'flex-end',
-                                                        justifyContent:
-                                                            'space-between',
-                                                    }}>
-                                                    <Text style={{ flex: 1 }}>
-                                                        {transaction.store.name}
-                                                    </Text>
-                                                    <Text style={{ flex: 2 }}>
-                                                        CA$ {transaction.amount}
-                                                    </Text>
-                                                </View>
-                                            }
-                                        />
-                                    );
-                                })}
-                        </List.Accordion>
-
-                        <List.Accordion
-                            title="This Month"
-                            left={props => (
-                                <List.Icon {...props} icon="folder" />
-                            )}
-                            onPress={() => {}}>
-                            {transactions &&
-                                transactions['this_month'] &&
-                                transactions['this_month'].map(transaction => {
-                                    return (
-                                        <List.Item
-                                            key={transaction.id}
-                                            title={
-                                                <View
-                                                    style={{
-                                                        width: 300,
-                                                        flexDirection: 'row',
-                                                        alignItems: 'flex-end',
-                                                        justifyContent:
-                                                            'space-between',
-                                                    }}>
-                                                    <Text style={{ flex: 1 }}>
-                                                        {transaction.store.name}
-                                                    </Text>
-                                                    <Text style={{ flex: 2 }}>
-                                                        CA$ {transaction.amount}
-                                                    </Text>
-                                                </View>
-                                            }
-                                        />
-                                    );
-                                })}
-                        </List.Accordion>
-
-                        <List.Accordion
-                            title="OverAll"
-                            left={props => (
-                                <List.Icon {...props} icon="folder" />
-                            )}
-                            onPress={() => {}}>
-                            {transactions &&
-                                transactions['overall'] &&
-                                transactions['overall'].map(transaction => {
-                                    return (
-                                        <List.Item
-                                            key={transaction.id}
-                                            title={
-                                                <View
-                                                    style={{
-                                                        width: 300,
-                                                        flexDirection: 'row',
-                                                        alignItems: 'flex-end',
-                                                        justifyContent:
-                                                            'space-between',
-                                                    }}>
-                                                    <Text style={{ flex: 1 }}>
-                                                        {transaction.store.name}
-                                                    </Text>
-                                                    <Text style={{ flex: 2 }}>
-                                                        CA$ {transaction.amount}
-                                                    </Text>
-                                                </View>
-                                            }
-                                        />
-                                    );
-                                })}
-                        </List.Accordion>
+                        {accordionItems.map(type => {
+                            return (
+                                <List.Accordion
+                                    key={type.key}
+                                    title={type.title}
+                                    left={props => (
+                                        <List.Icon {...props} icon="folder" />
+                                    )}>
+                                    {transactions &&
+                                        transactions[type.key] &&
+                                        transactions[type.key].map(
+                                            transaction => {
+                                                return (
+                                                    <PurchaseItem
+                                                        key={transaction.id}
+                                                        minimize={true}
+                                                        transaction={
+                                                            transaction
+                                                        }
+                                                    />
+                                                );
+                                            },
+                                        )}
+                                </List.Accordion>
+                            );
+                        })}
                     </List.Section>
                 </PaperProvider>
             </ScrollView>
@@ -183,3 +125,26 @@ const styles = StyleSheet.create({
 });
 
 export default Summery;
+
+{
+    /* <List.Item
+        key={transaction.id}
+        title={
+            <View
+                style={{
+                    width: 300,
+                    flexDirection: 'row',
+                    alignItems: 'flex-end',
+                    justifyContent:
+                        'space-between',
+                }}>
+                <Text style={{ flex: 1 }}>
+                    {transaction.store.name}
+                </Text>
+                <Text style={{ flex: 2 }}>
+                    CA$ {transaction.amount}
+                </Text>
+            </View>
+        }
+    /> */
+}
