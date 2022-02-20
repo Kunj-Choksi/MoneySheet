@@ -1,6 +1,11 @@
 import { StyleSheet } from 'react-native';
 
 const globalStyles = StyleSheet.create({
+    pickerStyle: {
+        borderWidth: 2,
+        borderColor: '#d3d3d3',
+        borderRadius: 8,
+    },
     flex1: {
         flex: 1,
     },
