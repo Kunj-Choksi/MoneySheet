@@ -29,10 +29,11 @@ export default {
             console.error('myError', error.message);
         }
     },
-    async addNewTransaction(storeId, amount, dateTime, purchaseType) {
+    async addNewTransaction(uid, storeId, amount, dateTime, purchaseType) {
         const res = await axios.post(
             `${API_HOST}/transaction/add_transaction`,
             {
+                user_id: uid,
                 store_id: storeId,
                 amount: amount,
                 datetime: dateTime,
@@ -50,6 +51,17 @@ export default {
             );
 
             return res.data;
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    async retrieveDashboardData(userId) {
+        try {
+            const res = await axios.post(
+                `${API_HOST}/dashboard/retrieve_dashboard_data`,
+                { user_id: userId },
+            );
+            return res.data.contents;
         } catch (error) {
             console.log(error);
         }

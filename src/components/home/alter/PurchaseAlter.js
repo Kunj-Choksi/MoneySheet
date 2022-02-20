@@ -11,6 +11,8 @@ import Toast from 'react-native-toast-message';
 import globalStyles from '../../../assets/stylesheet/global';
 
 import ajax from '../../../helpers/ajax';
+import storageManager from '../../../helpers/mmkv-storage';
+import { STORAGE } from '../../../helpers/Global';
 
 const schema = yup.object().shape({
     storeId: yup.number().required(),
@@ -46,7 +48,9 @@ export default function PurchaseAlter({ navigation }) {
     }, []);
 
     const onSubmit = data => {
+        const storedUser = storageManager.getMap(STORAGE.USER);
         ajax.addNewTransaction(
+            storedUser.uid,
             data.storeId,
             data.expenseAmount,
             data.date,

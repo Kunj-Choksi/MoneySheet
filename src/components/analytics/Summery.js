@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, BackHandler } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import {
@@ -7,12 +7,30 @@ import {
     Surface,
 } from 'react-native-paper';
 import { List } from 'react-native-paper';
+
 import globalStyles from '../../assets/stylesheet/global';
+import ajax from '../../helpers/ajax';
+import { STORAGE } from '../../helpers/Global';
+import storageManager from '../../helpers/mmkv-storage';
 
 const Summery = ({ navigation }) => {
     navigation.addListener('beforeRemove', e => {
         BackHandler.exitApp();
     });
+
+    const [transactions, setTransactions] = useState({});
+
+    useEffect(() => {
+        const getDashboardData = () => {
+            const storedUser = storageManager.getMap(STORAGE.USER);
+            ajax.retrieveDashboardData(storedUser.uid).then(data => {
+                setTransactions(data);
+            });
+        };
+
+        getDashboardData();
+    }, []);
+
     return (
         <>
             <ScrollView>
@@ -26,7 +44,12 @@ const Summery = ({ navigation }) => {
                             This month spending...
                         </Headline>
                         <Surface style={styles.headerSurface}>
-                            <Text style={globalStyles.textMedium}>CA$ 509</Text>
+                            <Text style={globalStyles.textMedium}>
+                                CA$ &nbsp;
+                                {transactions &&
+                                    transactions['this_month_spending'] &&
+                                    transactions['this_month_spending']}
+                            </Text>
                         </Surface>
                     </View>
                     <List.Section>
@@ -35,18 +58,32 @@ const Summery = ({ navigation }) => {
                             left={props => (
                                 <List.Icon {...props} icon="folder" />
                             )}>
-                            <List.Item title="First item" />
-                            <List.Item title="Second item" />
-                            <List.Item title="First item" />
-                            <List.Item title="Second item" />
-                            <List.Item title="First item" />
-                            <List.Item title="Second item" />
-                            <List.Item title="First item" />
-                            <List.Item title="Second item" />
-                            <List.Item title="First item" />
-                            <List.Item title="Second item" />
-                            <List.Item title="First item" />
-                            <List.Item title="Second item" />
+                            {transactions &&
+                                transactions['this_week'] &&
+                                transactions['this_week'].map(transaction => {
+                                    return (
+                                        <List.Item
+                                            key={transaction.id}
+                                            title={
+                                                <View
+                                                    style={{
+                                                        width: 300,
+                                                        flexDirection: 'row',
+                                                        alignItems: 'flex-end',
+                                                        justifyContent:
+                                                            'space-between',
+                                                    }}>
+                                                    <Text style={{ flex: 1 }}>
+                                                        {transaction.store.name}
+                                                    </Text>
+                                                    <Text style={{ flex: 2 }}>
+                                                        CA$ {transaction.amount}
+                                                    </Text>
+                                                </View>
+                                            }
+                                        />
+                                    );
+                                })}
                         </List.Accordion>
 
                         <List.Accordion
@@ -55,8 +92,32 @@ const Summery = ({ navigation }) => {
                                 <List.Icon {...props} icon="folder" />
                             )}
                             onPress={() => {}}>
-                            <List.Item title="First item" />
-                            <List.Item title="Second item" />
+                            {transactions &&
+                                transactions['this_month'] &&
+                                transactions['this_month'].map(transaction => {
+                                    return (
+                                        <List.Item
+                                            key={transaction.id}
+                                            title={
+                                                <View
+                                                    style={{
+                                                        width: 300,
+                                                        flexDirection: 'row',
+                                                        alignItems: 'flex-end',
+                                                        justifyContent:
+                                                            'space-between',
+                                                    }}>
+                                                    <Text style={{ flex: 1 }}>
+                                                        {transaction.store.name}
+                                                    </Text>
+                                                    <Text style={{ flex: 2 }}>
+                                                        CA$ {transaction.amount}
+                                                    </Text>
+                                                </View>
+                                            }
+                                        />
+                                    );
+                                })}
                         </List.Accordion>
 
                         <List.Accordion
@@ -65,8 +126,32 @@ const Summery = ({ navigation }) => {
                                 <List.Icon {...props} icon="folder" />
                             )}
                             onPress={() => {}}>
-                            <List.Item title="First item" />
-                            <List.Item title="Second item" />
+                            {transactions &&
+                                transactions['overall'] &&
+                                transactions['overall'].map(transaction => {
+                                    return (
+                                        <List.Item
+                                            key={transaction.id}
+                                            title={
+                                                <View
+                                                    style={{
+                                                        width: 300,
+                                                        flexDirection: 'row',
+                                                        alignItems: 'flex-end',
+                                                        justifyContent:
+                                                            'space-between',
+                                                    }}>
+                                                    <Text style={{ flex: 1 }}>
+                                                        {transaction.store.name}
+                                                    </Text>
+                                                    <Text style={{ flex: 2 }}>
+                                                        CA$ {transaction.amount}
+                                                    </Text>
+                                                </View>
+                                            }
+                                        />
+                                    );
+                                })}
                         </List.Accordion>
                     </List.Section>
                 </PaperProvider>
@@ -91,7 +176,6 @@ const styles = StyleSheet.create({
     headerSurface: {
         padding: 8,
         height: 60,
-        width: 100,
         alignItems: 'center',
         justifyContent: 'center',
         elevation: 8,

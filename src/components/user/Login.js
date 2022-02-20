@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     Image,
     StyleSheet,
@@ -18,11 +18,16 @@ import { STORAGE } from '../../helpers/Global';
 import storageManager from '../../helpers/mmkv-storage';
 
 const Login = ({ navigation }) => {
-    const storedUser = storageManager.getMap(STORAGE.USER);
-    if (storedUser) {
-        ToastAndroid.show(`Signed as ${storedUser.name}`, ToastAndroid.LONG);
-        navigation.navigate('Dashboard');
-    }
+    useEffect(() => {
+        const storedUser = storageManager.getMap(STORAGE.USER);
+        if (storedUser) {
+            ToastAndroid.show(
+                `Signed as ${storedUser.name}`,
+                ToastAndroid.LONG,
+            );
+            navigation.navigate('Dashboard');
+        }
+    });
 
     async function getLogin() {
         try {
@@ -42,7 +47,10 @@ const Login = ({ navigation }) => {
                         name: res.user.displayName,
                         photoURL: res.user.photoURL,
                     };
-                    ToastAndroid.show(`Signed as ${res.user.displayName}`, ToastAndroid.LONG);
+                    ToastAndroid.show(
+                        `Signed as ${res.user.displayName}`,
+                        ToastAndroid.LONG,
+                    );
                     storageManager.setMap(STORAGE.USER, userObj);
                     ajax.registerUser(userObj);
                     navigation.navigate('Dashboard');

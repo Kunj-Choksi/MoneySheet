@@ -37,7 +37,8 @@ const LoginStackNavigator = () => {
 
 const HomeStackNavigator = () => {
     return (
-        <Stack.Navigator screenOptions={screenOptionStyle}>
+        <Stack.Navigator
+            screenOptions={{ ...screenOptionStyle, headerLeft: false }}>
             <Stack.Screen
                 name="Home"
                 component={Home}
