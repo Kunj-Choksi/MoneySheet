@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, BackHandler } from 'react-native';
+import {
+    View,
+    StyleSheet,
+    Text,
+    BackHandler,
+    RefreshControl,
+} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import {
     Headline,
@@ -15,6 +21,7 @@ import storageManager from '../../helpers/mmkv-storage';
 import PurchaseItem from '../home/purchase/PurchaseItem';
 
 const Summery = ({ navigation }) => {
+    const [pageRefresh, setPageRefresh] = useState(false);
     const accordionItems = [
         {
             title: 'This Week',
@@ -29,27 +36,38 @@ const Summery = ({ navigation }) => {
             key: 'overall',
         },
     ];
-    console.log(accordionItems);
+
     navigation.addListener('beforeRemove', e => {
         BackHandler.exitApp();
     });
 
     const [transactions, setTransactions] = useState({});
 
-    useEffect(() => {
-        const getDashboardData = () => {
-            const storedUser = storageManager.getMap(STORAGE.USER);
-            ajax.retrieveDashboardData(storedUser.uid).then(data => {
-                setTransactions(data);
-            });
-        };
+    const getDashboardData = () => {
+        const storedUser = storageManager.getMap(STORAGE.USER);
+        ajax.retrieveDashboardData(storedUser.uid).then(data => {
+            setTransactions(data);
+            setPageRefresh(false);
+        });
+    };
 
+    useEffect(() => {
         getDashboardData();
     }, []);
 
     return (
         <>
-            <ScrollView>
+            <ScrollView
+                refreshControl={
+                    <RefreshControl
+                        refreshing={pageRefresh}
+                        colors={['#e74c3c', 'cyan']}
+                        onRefresh={() => {
+                            setPageRefresh(true);
+                            getDashboardData();
+                        }}
+                    />
+                }>
                 <PaperProvider>
                     <View style={styles.headerBadge}>
                         <Headline
