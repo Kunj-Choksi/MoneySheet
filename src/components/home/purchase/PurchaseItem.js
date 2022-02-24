@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     itemTitle: {
-        fontSize: 25,
+        fontSize: 20,
     },
 });
 

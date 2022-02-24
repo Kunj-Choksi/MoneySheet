@@ -5,9 +5,11 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "start": "react-native start",
+    "start": "react-native start --reset-cache",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "android-device": "react-native run-android --deviceId=a869b89a",
+    "android-prod": "react-native run-android --variant release --deviceId=a869b89a"
   },
   "dependencies": {
     "@hookform/resolvers": "^2.8.8",

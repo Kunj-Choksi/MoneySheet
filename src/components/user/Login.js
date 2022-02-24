@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Image,
     StyleSheet,
@@ -6,6 +6,7 @@ import {
     View,
     TouchableHighlight,
     ToastAndroid,
+    StatusBar,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 
@@ -16,16 +17,17 @@ import globalStyles from '../../assets/stylesheet/global';
 import { STORAGE } from '../../helpers/Global';
 
 import storageManager from '../../helpers/mmkv-storage';
+import { ActivityIndicator } from 'react-native-paper';
 
 const Login = ({ navigation }) => {
+    let [loader, setLoader] = useState(false);
     useEffect(() => {
         const storedUser = storageManager.getMap(STORAGE.USER);
         if (storedUser) {
-            ToastAndroid.show(
-                `Signed as ${storedUser.name}`,
-                ToastAndroid.LONG,
-            );
-            navigation.navigate('Dashboard');
+            setLoader(true);
+            ajax.verifyUser(storedUser.email, storedUser.uid).then(res => {
+                manageSuccessFullLogin(res);
+            });
         }
     });
 
@@ -47,46 +49,76 @@ const Login = ({ navigation }) => {
                         name: res.user.displayName,
                         photoURL: res.user.photoURL,
                     };
-                    ToastAndroid.show(
-                        `Signed as ${res.user.displayName}`,
-                        ToastAndroid.LONG,
-                    );
-                    storageManager.setMap(STORAGE.USER, userObj);
-                    ajax.registerUser(userObj);
-                    navigation.navigate('Dashboard');
+
+                    ajax.registerUser(userObj).then(res => {
+                        storageManager.setMap(STORAGE.USER, userObj);
+                        manageSuccessFullLogin(res);
+                    });
                 });
         } catch (error) {
             console.log(error);
         }
     }
+
+    const manageSuccessFullLogin = res => {
+        if (res.status === 'error') {
+            ToastAndroid.show(
+                'We are not able to verify you. Login again!',
+                ToastAndroid.LONG,
+            );
+            return;
+        }
+
+        ToastAndroid.show(`Signed successfully`, ToastAndroid.SHORT);
+
+        //setting JWT token in axios header for furthur requests
+        const token = res.contents.token;
+        ajax.setHeaderToken(token);
+        loader = false;
+
+        navigation.navigate('Dashboard');
+    };
+
     return (
         <>
-            <View style={globalStyles.center}>
-                <Text
-                    style={[
-                        globalStyles.text2XLarge,
-                        globalStyles.textAlignCenter,
-                        globalStyles.marB20,
-                    ]}>
-                    To start Get login with Google
-                </Text>
-                <TouchableHighlight
-                    underlayColor="#d3d3d3"
-                    style={styles.logoBox}
-                    onPress={() => {
-                        getLogin();
-                    }}>
-                    <View style={styles.logoBoxBody}>
-                        <Image
-                            style={styles.loginLogo}
-                            source={require('../../assets/images/google.png')}
-                        />
-                        <Text style={globalStyles.textLarge}>
-                            Login with Google
-                        </Text>
-                    </View>
-                </TouchableHighlight>
-            </View>
+            {loader && (
+                <View
+                    style={[globalStyles.center, globalStyles.overBackground]}>
+                    <ActivityIndicator size="large" color="#faac7e" />
+                    <Text
+                        style={{ marginTop: 20, fontSize: 25, color: 'white' }}>
+                        Going dynamic...
+                    </Text>
+                </View>
+            )}
+            {!loader && (
+                <View style={globalStyles.center}>
+                    <Text
+                        style={[
+                            globalStyles.text2XLarge,
+                            globalStyles.textAlignCenter,
+                            globalStyles.marB20,
+                        ]}>
+                        To start Get login with Google
+                    </Text>
+                    <TouchableHighlight
+                        underlayColor="#d3d3d3"
+                        style={styles.logoBox}
+                        onPress={() => {
+                            getLogin();
+                        }}>
+                        <View style={styles.logoBoxBody}>
+                            <Image
+                                style={styles.loginLogo}
+                                source={require('../../assets/images/google.png')}
+                            />
+                            <Text style={globalStyles.textLarge}>
+                                Login with Google
+                            </Text>
+                        </View>
+                    </TouchableHighlight>
+                </View>
+            )}
         </>
     );
 };

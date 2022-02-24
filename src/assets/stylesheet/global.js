@@ -56,6 +56,16 @@ const globalStyles = StyleSheet.create({
         alignItems: 'center',
         textAlign: 'center',
     },
+    overBackground: {
+        width: '100%',
+        height: '100%',
+        flex: 1,
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        opacity: 0.5,
+        backgroundColor: 'black',
+    },
     tag: {
         padding: 15,
         marginTop: 15,
