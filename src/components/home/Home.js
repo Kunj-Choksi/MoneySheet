@@ -2,13 +2,13 @@ import React from 'react';
 import moment from 'moment';
 import {
     View,
-    Button,
     Text,
     TouchableHighlight,
     StyleSheet,
     FlatList,
 } from 'react-native';
-import ActionButton from 'react-native-action-button';
+import { FAB } from 'react-native-paper';
+import globalStyles from '../../assets/stylesheet/global';
 
 const Home = ({ navigation }) => {
     const navigateToPurchaseAlter = () => {
@@ -48,9 +48,12 @@ const Home = ({ navigation }) => {
                     )}
                 />
             </View>
-            <ActionButton
-                buttonColor="rgba(231,76,60,1)"
-                onPress={navigateToPurchaseAlter}
+            <FAB
+                style={globalStyles.fab}
+                large
+                color="#554ea7"
+                icon="plus"
+                onPress={() => navigateToPurchaseAlter()}
             />
         </>
     );

@@ -20,7 +20,7 @@ import storageManager from '../../helpers/mmkv-storage';
 import { ActivityIndicator } from 'react-native-paper';
 
 const Login = ({ navigation }) => {
-    let [loader, setLoader] = useState(false);
+    let [loader, setLoader] = useState(true);
     useEffect(() => {
         const storedUser = storageManager.getMap(STORAGE.USER);
         if (storedUser) {
@@ -28,6 +28,8 @@ const Login = ({ navigation }) => {
             ajax.verifyUser(storedUser.email, storedUser.uid).then(res => {
                 manageSuccessFullLogin(res);
             });
+        } else {
+            setLoader(false);
         }
     });
 
@@ -81,7 +83,7 @@ const Login = ({ navigation }) => {
 
     return (
         <>
-            {loader && (
+            {loader ? (
                 <View
                     style={[globalStyles.center, globalStyles.overBackground]}>
                     <ActivityIndicator size="large" color="#faac7e" />
@@ -90,8 +92,7 @@ const Login = ({ navigation }) => {
                         Going dynamic...
                     </Text>
                 </View>
-            )}
-            {!loader && (
+            ) : (
                 <View style={globalStyles.center}>
                     <Text
                         style={[

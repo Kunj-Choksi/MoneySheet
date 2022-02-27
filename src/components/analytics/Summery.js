@@ -7,12 +7,10 @@ import {
     RefreshControl,
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import {
-    Headline,
-    Provider as PaperProvider,
-    Surface,
-} from 'react-native-paper';
+import { Headline, Provider as PaperProvider } from 'react-native-paper';
 import { List } from 'react-native-paper';
+import moment from 'moment';
+import { StatusBar } from 'react-native';
 
 import globalStyles from '../../assets/stylesheet/global';
 import ajax from '../../helpers/ajax';
@@ -21,6 +19,7 @@ import storageManager from '../../helpers/mmkv-storage';
 import PurchaseItem from '../home/purchase/PurchaseItem';
 
 const Summery = ({ navigation }) => {
+    StatusBar.setBackgroundColor('#f8ab7f');
     const [pageRefresh, setPageRefresh] = useState(false);
     const accordionItems = [
         {
@@ -74,17 +73,17 @@ const Summery = ({ navigation }) => {
                             style={[
                                 globalStyles.textAlignCenter,
                                 globalStyles.marB20,
+                                globalStyles.text2XLarge,
+                                styles.headerHeadline,
                             ]}>
-                            This month spending...
+                            Expense for {moment().format('MMMM')}
                         </Headline>
-                        <Surface style={styles.headerSurface}>
-                            <Text style={globalStyles.textMedium}>
-                                CA$ &nbsp;
-                                {transactions &&
-                                    transactions['this_month_spending'] &&
-                                    transactions['this_month_spending']}
-                            </Text>
-                        </Surface>
+                        <Text style={globalStyles.textMedium}>
+                            CA$ &nbsp;
+                            {transactions &&
+                                transactions['this_month_spending'] &&
+                                transactions['this_month_spending'].toFixed(2)}
+                        </Text>
                     </View>
                     <List.Section>
                         {accordionItems.map(type => {
@@ -129,16 +128,14 @@ const styles = StyleSheet.create({
     },
     headerBadge: {
         textAlign: 'center',
-        padding: 30,
+        padding: 40,
         alignItems: 'center',
         justifyContent: 'space-between',
+        backgroundColor: '#f8ab7f',
     },
-    headerSurface: {
-        padding: 8,
-        height: 60,
-        alignItems: 'center',
-        justifyContent: 'center',
-        elevation: 8,
+    headerHeadline: {
+        marginTop: 20,
+        fontWeight: '700',
     },
 });
 

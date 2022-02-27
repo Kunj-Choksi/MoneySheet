@@ -42,6 +42,11 @@ const PurchaseItem = ({ navigation, transaction }) => {
                             </Text>
                         </View>
                         <View>
+                            <Text style={globalStyles.italic}>
+                                {transaction.comments}
+                            </Text>
+                        </View>
+                        <View>
                             <Text style={globalStyles.textSemiBold}>
                                 {moment(transaction.datetime).format(
                                     'ddd, DD MMM',
@@ -64,7 +69,7 @@ const styles = StyleSheet.create({
         bottom: 0,
     },
     listContainer: {
-        padding: 15,
+        padding: 10,
         display: 'flex',
         flexDirection: 'row',
         borderBottomWidth: 2,

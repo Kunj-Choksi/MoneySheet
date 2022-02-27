@@ -59,7 +59,7 @@ const HomeStackNavigator = () => {
                 name="AlterPurchase"
                 component={PurchaseAlter}
                 options={{
-                    title: 'Modify Purchase',
+                    title: 'Where did you spent?',
                     headerTitleAlign: 'center',
                 }}
             />
@@ -75,8 +75,7 @@ const SummeryStackNavigator = () => {
                 name="Summery"
                 component={Summery}
                 options={{
-                    title: 'Welcome Aboard Sire!',
-                    headerTitleAlign: 'center',
+                    headerShown: false,
                 }}
             />
         </Stack.Navigator>

@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+//@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;500;600;700&display=swap');
 
 const globalStyles = StyleSheet.create({
     pickerStyle: {
@@ -12,6 +13,17 @@ const globalStyles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
+        height: '100%',
+    },
+    fab: {
+        position: 'absolute',
+        margin: 30,
+        right: 0,
+        bottom: 0,
+        backgroundColor: '#f8ab7f',
+    },
+    italic: {
+        fontStyle: 'italic',
     },
     textDanger: {
         color: 'red',

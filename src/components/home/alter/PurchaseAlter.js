@@ -1,32 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import {
-    Text,
-    View,
-    TextInput,
-    Button,
-    StyleSheet,
-    TouchableOpacity,
-    ToastAndroid,
-} from 'react-native';
-
+import React, { useEffect, useRef, useState } from 'react';
+import { Text, View, Button, StyleSheet, ToastAndroid } from 'react-native';
+import { TextInput, FAB } from 'react-native-paper';
 import { useForm, Controller } from 'react-hook-form';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import moment from 'moment';
+import { ScrollView } from 'react-native-gesture-handler';
 
 import globalStyles from '../../../assets/stylesheet/global';
-
 import ajax from '../../../helpers/ajax';
 import storageManager from '../../../helpers/mmkv-storage';
 import { STORAGE } from '../../../helpers/Global';
-import moment from 'moment';
 
 const schema = yup.object().shape({
     storeId: yup.number().required(),
     expenseAmount: yup.number().required(),
     date: yup.date().required(),
     type: yup.number().required(),
+    comments: yup.string(),
 });
 
 const defaultValues = {
@@ -34,16 +27,18 @@ const defaultValues = {
     expenseAmount: 0,
     date: new Date(),
     type: 0,
+    comments: '',
 };
 
 const PurchaseAlter = ({ navigation }) => {
     const [stores, setStores] = useState([]);
     const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
+    const expenseRef = useRef();
 
-    const { control, handleSubmit, errors, setValue, getValues, onChange } =
-        useForm({
-            resolver: yupResolver(schema),
-        });
+    const { control, errors, setValue, getValues } = useForm({
+        mode: 'onSubmit',
+        resolver: yupResolver(schema),
+    });
 
     useEffect(() => {
         const getStores = () => {
@@ -55,14 +50,20 @@ const PurchaseAlter = ({ navigation }) => {
         getStores();
     }, []);
 
-    const onSubmit = data => {
+    const onSubmit = () => {
+        if (getValues('expenseAmount') == 0) {
+            ToastAndroid.show('Amount must be more 0', ToastAndroid.SHORT);
+            expenseRef.current.focus();
+            return;
+        }
         const storedUser = storageManager.getMap(STORAGE.USER);
         ajax.addNewTransaction(
             storedUser.uid,
-            data.storeId,
-            data.expenseAmount,
-            data.date,
-            data.type,
+            getValues('storeId'),
+            getValues('expenseAmount'),
+            getValues('date'),
+            getValues('type'),
+            getValues('comments'),
         ).then(data => {
             ToastAndroid.show('Added new transaction!', ToastAndroid.SHORT);
             navigation.navigate('Home');
@@ -71,157 +72,182 @@ const PurchaseAlter = ({ navigation }) => {
 
     return (
         <>
-            <View style={globalStyles.container}>
-                <View style={globalStyles.marB20}>
-                    <Controller
-                        control={control}
-                        name="storeId"
-                        render={({ value }) => (
-                            <View style={globalStyles.pickerStyle}>
-                                <Picker
-                                    selectedValue={getValues('storeId')}
-                                    onValueChange={itemValue =>
-                                        setValue('storeId', itemValue, true)
-                                    }>
-                                    {stores.map(store => {
-                                        return (
-                                            <Picker.Item
-                                                key={store.id}
-                                                label={store.name}
-                                                value={store.id}
-                                            />
-                                        );
-                                    })}
-                                </Picker>
-                            </View>
+            <ScrollView>
+                <View style={globalStyles.container}>
+                    <View style={globalStyles.marB20}>
+                        <Controller
+                            control={control}
+                            name="storeId"
+                            render={({ value }) => (
+                                <View style={globalStyles.pickerStyle}>
+                                    <Picker
+                                        selectedValue={getValues('storeId')}
+                                        onValueChange={itemValue =>
+                                            setValue('storeId', itemValue, true)
+                                        }>
+                                        {stores.map(store => {
+                                            return (
+                                                <Picker.Item
+                                                    key={store.id}
+                                                    label={store.name}
+                                                    value={store.id}
+                                                />
+                                            );
+                                        })}
+                                    </Picker>
+                                </View>
+                            )}
+                        />
+                        {errors?.storeId?.message && (
+                            <Text style={styles.error}>
+                                {errors.storeId.message}
+                            </Text>
                         )}
-                    />
-                    {errors?.storeId?.message && (
-                        <Text style={styles.error}>
-                            {errors.storeId.message}
-                        </Text>
-                    )}
-                </View>
-                {/* Expense amount */}
-                <View style={globalStyles.marB20}>
-                    <Controller
-                        control={control}
-                        name="expenseAmount"
-                        defaultValue={defaultValues.expenseAmount}
-                        render={({ value }) => (
-                            <TextInput
-                                placeholder="Expense amount"
-                                keyboardType="numeric"
-                                onChangeText={text => {
-                                    setValue('expenseAmount', text, true);
-                                }}
-                                style={globalStyles.inputText}
-                                value={value}
-                            />
-                        )}
-                    />
-                    {errors?.expenseAmount?.message && (
-                        <Text>{errors.expenseAmount.message}</Text>
-                    )}
-                </View>
-                {/* Expense date select text */}
-                <View style={globalStyles.marB20}>
-                    <Text style={globalStyles.marB20}>
-                        <Text style={globalStyles.textBold}>
-                            Expense Date: &nbsp;
-                        </Text>
-                        {moment(getValues('date')).format('ddd DD MMM, YYYY')}{' '}
-                    </Text>
-                    <Button
-                        onPress={() => {
-                            setIsDatePickerVisible(!isDatePickerVisible);
-                        }}
-                        title="Select Expense Date"></Button>
-                </View>
-                {/* Expense date selector */}
-                <View style={globalStyles.marB20}>
-                    <Controller
-                        control={control}
-                        name="date"
-                        defaultValue={defaultValues.date}
-                        render={({ value }) => (
-                            <View>
-                                <DateTimePickerModal
-                                    isVisible={isDatePickerVisible}
-                                    mode="date"
-                                    onConfirm={date => {
-                                        setValue('date', date, true);
-                                        setIsDatePickerVisible(
-                                            !isDatePickerVisible,
-                                        );
+                    </View>
+                    {/* Expense amount */}
+                    <View style={globalStyles.marB20}>
+                        <Controller
+                            control={control}
+                            name="expenseAmount"
+                            defaultValue={defaultValues.expenseAmount}
+                            render={({ value }) => (
+                                <TextInput
+                                    ref={expenseRef}
+                                    placeholder="Expense amount"
+                                    keyboardType="numeric"
+                                    onChangeText={text => {
+                                        setValue('expenseAmount', text, true);
                                     }}
-                                    onCancel={() => {
-                                        setIsDatePickerVisible(
-                                            !isDatePickerVisible,
-                                        );
-                                    }}
+                                    value={value}
                                 />
-                            </View>
+                            )}
+                        />
+                        {errors?.expenseAmount?.message && (
+                            <Text>{errors.expenseAmount.message}</Text>
                         )}
-                    />
-                    {errors?.date?.message && (
-                        <Text style={styles.error}>{errors.date.message}</Text>
-                    )}
-                </View>
-                {/* Expense type */}
-                <View style={[globalStyles.marB20, globalStyles.pickerStyle]}>
-                    <Controller
-                        control={control}
-                        name="type"
-                        defaultValue={defaultValues.type}
-                        render={({ value }) => (
-                            <View>
-                                <Picker
-                                    selectedValue={getValues('type')}
-                                    onValueChange={itemValue =>
-                                        setValue('type', itemValue, true)
-                                    }>
-                                    <Picker.Item
-                                        key={0}
-                                        label="Expense"
-                                        value={0}
+                    </View>
+                    {/* Expense date select text */}
+                    <View style={globalStyles.marB20}>
+                        <Text style={globalStyles.marB20}>
+                            <Text style={globalStyles.textBold}>
+                                Expense Date: &nbsp;
+                            </Text>
+                            {moment(getValues('date')).format(
+                                'ddd DD MMM, YYYY',
+                            )}{' '}
+                        </Text>
+                        <Button
+                            onPress={() => {
+                                setIsDatePickerVisible(!isDatePickerVisible);
+                            }}
+                            title="Select Expense Date"></Button>
+                    </View>
+                    {/* Expense date selector */}
+                    <View style={globalStyles.marB20}>
+                        <Controller
+                            control={control}
+                            name="date"
+                            defaultValue={defaultValues.date}
+                            render={({ value }) => (
+                                <View>
+                                    <DateTimePickerModal
+                                        isVisible={isDatePickerVisible}
+                                        mode="date"
+                                        onConfirm={date => {
+                                            setValue('date', date, true);
+                                            setIsDatePickerVisible(
+                                                !isDatePickerVisible,
+                                            );
+                                        }}
+                                        onCancel={() => {
+                                            setIsDatePickerVisible(
+                                                !isDatePickerVisible,
+                                            );
+                                        }}
                                     />
-                                    <Picker.Item
-                                        key={1}
-                                        label="Income"
-                                        value={1}
-                                    />
-                                </Picker>
-                            </View>
+                                </View>
+                            )}
+                        />
+                        {errors?.date?.message && (
+                            <Text style={styles.error}>
+                                {errors.date.message}
+                            </Text>
                         )}
-                    />
-                    {errors?.type?.message && (
-                        <Text style={styles.error}>{errors.type.message}</Text>
-                    )}
+                    </View>
+                    {/* Expense type */}
+                    <View
+                        style={[globalStyles.marB20, globalStyles.pickerStyle]}>
+                        <Controller
+                            control={control}
+                            name="type"
+                            defaultValue={defaultValues.type}
+                            render={({ value }) => (
+                                <View>
+                                    <Picker
+                                        selectedValue={getValues('type')}
+                                        onValueChange={itemValue =>
+                                            setValue('type', itemValue, true)
+                                        }>
+                                        <Picker.Item
+                                            key={0}
+                                            label="Expense"
+                                            value={0}
+                                        />
+                                        <Picker.Item
+                                            key={1}
+                                            label="Income"
+                                            value={1}
+                                        />
+                                    </Picker>
+                                </View>
+                            )}
+                        />
+                        {errors?.type?.message && (
+                            <Text style={styles.error}>
+                                {errors.type.message}
+                            </Text>
+                        )}
+                    </View>
+                    {/* Expense comments */}
+                    <View style={[globalStyles.marB20]}>
+                        <Controller
+                            control={control}
+                            name="comments"
+                            defaultValue={defaultValues.comments}
+                            render={({ value }) => (
+                                <TextInput
+                                    multiline
+                                    placeholder="Comments"
+                                    onChangeText={text => {
+                                        setValue('comments', text, true);
+                                    }}
+                                    value={value}
+                                />
+                            )}
+                        />
+                        {errors?.comments?.message && (
+                            <Text style={styles.error}>
+                                {errors.comments.message}
+                            </Text>
+                        )}
+                    </View>
                 </View>
-            </View>
+            </ScrollView>
             {/* Footer button */}
-            <View style={styles.bottomStyle}>
-                <TouchableOpacity
-                    style={styles.submitBtnStyle}
-                    onPress={handleSubmit(onSubmit)}>
-                    <Text
-                        style={{
-                            ...globalStyles.textMedium,
-                            color: 'white',
-                            textAlign: 'center',
-                        }}>
-                        Submit
-                    </Text>
-                </TouchableOpacity>
-            </View>
+            <FAB
+                style={globalStyles.fab}
+                large
+                color="#554ea7"
+                icon="check"
+                onPress={() => onSubmit()}
+            />
         </>
     );
 };
 
 const styles = StyleSheet.create({
     bottomStyle: {
-        alignItems: 'center',
+        alignItems: 'flex-end',
         bottom: 30,
     },
     submitBtnStyle: {

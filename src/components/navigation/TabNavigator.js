@@ -13,7 +13,14 @@ const BottomTabNavigator = () => {
     return (
         <Tab.Navigator
             defaultScreenOptions="Summery"
-            screenOptions={{ headerShown: false }}>
+            screenOptions={{
+                headerShown: false,
+                tabBarStyle: {
+                    height: 60,
+                    paddingTop: 10,
+                    paddingBottom: 10,
+                },
+            }}>
             <Tab.Screen
                 name="Summary"
                 component={SummeryStackNavigator}
@@ -29,7 +36,7 @@ const BottomTabNavigator = () => {
                 }}
             />
             <Tab.Screen
-                name="Landing"
+                name="Home"
                 component={HomeStackNavigator}
                 options={{
                     tabBarIcon: ({ color, size }) => {

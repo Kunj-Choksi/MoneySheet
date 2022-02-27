@@ -62,7 +62,7 @@ export default {
             console.error('myError', error.message);
         }
     },
-    async addNewTransaction(uid, storeId, amount, dateTime, purchaseType) {
+    async addNewTransaction(uid, storeId, amount, dateTime, purchaseType, comments) {
         const res = await axios.post(
             `${API_HOST}/transaction/add_transaction`,
             {
@@ -71,6 +71,7 @@ export default {
                 amount: amount,
                 datetime: dateTime,
                 purchase_type: purchaseType,
+                comments: comments
             },
             {
                 headers: {
