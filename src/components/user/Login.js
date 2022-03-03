@@ -6,7 +6,6 @@ import {
     View,
     TouchableHighlight,
     ToastAndroid,
-    StatusBar,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 
@@ -25,7 +24,7 @@ const Login = ({ navigation }) => {
         const storedUser = storageManager.getMap(STORAGE.USER);
         if (storedUser) {
             setLoader(true);
-            ajax.verifyUser(storedUser.email, storedUser.uid).then(res => {
+            ajax.verifyClient(storedUser.email, storedUser.uid).then(res => {
                 manageSuccessFullLogin(res);
             });
         } else {
@@ -52,7 +51,7 @@ const Login = ({ navigation }) => {
                         photoURL: res.user.photoURL,
                     };
 
-                    ajax.registerUser(userObj).then(res => {
+                    ajax.registerClient(userObj).then(res => {
                         storageManager.setMap(STORAGE.USER, userObj);
                         manageSuccessFullLogin(res);
                     });

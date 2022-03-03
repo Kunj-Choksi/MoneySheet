@@ -6,20 +6,20 @@ export default {
     setHeaderToken(headerToken) {
         token = `Bearer ${headerToken}`;
     },
-    async verifyUser(email, uid) {
+    async verifyClient(email, uid) {
         try {
-            const res = await axios.post(`${API_HOST}/user/verify_user`, {
+            const res = await axios.post(`${API_HOST}/client/verify_client`, {
                 email: email,
                 google_uid: uid,
             });
             return res.data;
         } catch (error) {}
     },
-    async registerUser(userObj) {
+    async registerClient(clientObj) {
         try {
             const res = await axios.post(
-                `${API_HOST}/user/register_user`,
-                userObj,
+                `${API_HOST}/client/register_client`,
+                clientObj,
             );
 
             return res.data;
@@ -66,7 +66,7 @@ export default {
         const res = await axios.post(
             `${API_HOST}/transaction/add_transaction`,
             {
-                user_id: uid,
+                client_id: uid,
                 store_id: storeId,
                 amount: amount,
                 datetime: dateTime,
@@ -83,11 +83,11 @@ export default {
         return res.data;
     },
 
-    async retrieveDashboardData(userId) {
+    async retrieveDashboardData(clientId) {
         try {
             const res = await axios.post(
                 `${API_HOST}/dashboard/retrieve_dashboard_data`,
-                { user_id: userId },
+                { client_id: clientId },
                 {
                     headers: {
                         Authorization: token,
