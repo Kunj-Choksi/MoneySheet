@@ -36,3 +36,24 @@
         "uid": "bUsjDTtJTJaWuOuGKdyXwXRrMZq1"
     }
 }
+
+//
+
+<List.Item
+    key={transaction.id}
+    title={
+        <View
+            style={{
+                width: 300,
+                flexDirection: 'row',
+                alignItems: 'flex-end',
+                justifyContent:
+                    'space-between',
+            }}>
+            <Text style={{ flex: 1 }}>
+                {transaction.store.name}
+            </Text>
+            <Text style={{ flex: 2 }}>
+                CA$ {transaction.amount}
+            </Text>
+        </View>
