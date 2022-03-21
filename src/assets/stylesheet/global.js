@@ -62,6 +62,9 @@ const globalStyles = StyleSheet.create({
     marB20: {
         marginBottom: 20,
     },
+    marT10: {
+        marginTop: 10,
+    },
     center: {
         flex: 1,
         justifyContent: 'center',

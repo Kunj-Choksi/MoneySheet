@@ -19,23 +19,17 @@ import { STORAGE } from '../../helpers/Global';
 import storageManager from '../../helpers/mmkv-storage';
 import PurchaseItem from '../home/purchase/PurchaseItem';
 import Piechart from '../chartKit/Piechart';
+import Linechart from '../chartKit/LineChart';
 
 const Summery = ({ navigation }) => {
     StatusBar.setBackgroundColor('#f8ab7f');
     const [pageRefresh, setPageRefresh] = useState(false);
-    let [pieChartData, setPieChartData] = useState([]);
+    const [monthlyChartData, setMonthlyChartData] = useState([]);
+
     const accordionItems = [
         {
             title: 'This Week',
             key: 'this_week',
-        },
-        {
-            title: 'This Month',
-            key: 'this_month',
-        },
-        {
-            title: 'Overall',
-            key: 'overall',
         },
     ];
 
@@ -48,27 +42,18 @@ const Summery = ({ navigation }) => {
     const getDashboardData = () => {
         const storedUser = storageManager.getMap(STORAGE.USER);
         ajax.retrieveDashboardData(storedUser.uid).then(data => {
+            console.log(data);
             setTransactions(data);
-            let pieChartDataMap = {};
-            for (let tran of data.this_month) {
-                if (pieChartDataMap[tran.store.name] == undefined) {
-                    pieChartDataMap[tran.store.name] = {
-                        name: tran.store.name,
-                        population: 0,
-                        color: randomColor(),
-                        legendFontColor: '#7F7F7F',
-                        legendFontSize: 15,
-                    };
-                }
-
-                pieChartDataMap[tran.store.name].population += tran.amount;
+            let monthData = data.by_month_sum.sort(
+                (a, b) => b.month_index - a.month_index,
+            );
+            let [labels, dataPoints] = [[], []];
+            for (let md of monthData) {
+                labels.push(md.month);
+                dataPoints.push(md.amount);
             }
-            let sortedPieChartData = Object.values(pieChartDataMap)
-                ? Object.values(pieChartDataMap).sort(
-                      (a, b) => b.population - a.population,
-                  )
-                : [];
-            setPieChartData(Object.values(sortedPieChartData));
+            setMonthlyChartData([labels, dataPoints]);
+
             setPageRefresh(false);
         });
     };
@@ -107,7 +92,16 @@ const Summery = ({ navigation }) => {
                             transactions['this_month_spending'].toFixed(2)}
                     </Text>
                 </View>
-                <List.Section>
+                {monthlyChartData && monthlyChartData.length > 0 && (
+                    <View style={styles.lineChart}>
+                        <Linechart
+                            labels={monthlyChartData[0]}
+                            dataPoints={monthlyChartData[1]}
+                        />
+                    </View>
+                )}
+
+                <List.Section style={globalStyles.marT10}>
                     {accordionItems.map(type => {
                         return (
                             <List.Accordion
@@ -131,22 +125,6 @@ const Summery = ({ navigation }) => {
                         );
                     })}
                 </List.Section>
-                <View style={styles.chartContainer}>
-                    <View style={{ ...globalStyles.center, marginVertical: 10 }}>
-                        <Text
-                            style={[
-                                globalStyles.textLarge,
-                                globalStyles.textBold,
-                            ]}>
-                            Mostly spent on
-                        </Text>
-                    </View>
-                    <View>
-                        {pieChartData.length > 0 && (
-                            <Piechart data={pieChartData} />
-                        )}
-                    </View>
-                </View>
             </ScrollView>
         </>
     );
@@ -172,6 +150,10 @@ const styles = StyleSheet.create({
     },
     chartContainer: {
         paddingBottom: 70,
+    },
+    lineChart: {
+        marginTop: 30,
+        padding: 0,
     },
 });
 
