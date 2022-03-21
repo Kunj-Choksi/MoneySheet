@@ -11,9 +11,10 @@ const Piechart = ({ data }) => {
             width={chartConfig.screenWidth}
             height={250}
             chartConfig={chartConfig.config}
-            accessor={'population'}
+            accessor={'amount'}
             paddingLeft={'0'}
             center={[10, 0]}
+            absolute
         />
     );
 };

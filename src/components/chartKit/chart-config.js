@@ -1,6 +1,6 @@
 import { Dimensions } from 'react-native';
 
-export default  {
+export default {
     screenWidth: Dimensions.get('window').width,
     config: {
         backgroundGradientFromOpacity: 0,
@@ -9,5 +9,5 @@ export default  {
         strokeWidth: 2, // optional, default 3
         barPercentage: 0.5,
         useShadowColorFromDataset: false, // optional
-    }
-}
+    },
+};

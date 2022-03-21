@@ -42,7 +42,6 @@ const Summery = ({ navigation }) => {
     const getDashboardData = () => {
         const storedUser = storageManager.getMap(STORAGE.USER);
         ajax.retrieveDashboardData(storedUser.uid).then(data => {
-            console.log(data);
             setTransactions(data);
             let monthData = data.by_month_sum.sort(
                 (a, b) => b.month_index - a.month_index,
