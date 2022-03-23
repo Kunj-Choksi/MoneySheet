@@ -10,7 +10,7 @@ import Piechart from '../../chartKit/Piechart';
 import { ScrollView } from 'react-native-gesture-handler';
 
 const MonthlyPurchase = ({ navigation, route }) => {
-    const periodMonth = moment(route.params.period, 'x').format('MMM');
+    const periodMonth = moment(route.params.period, 'x').format('M');
     const periodYear = moment(route.params.period, 'x').format('YYYY');
 
     const [transactions, setTransactions] = useState([]);
@@ -23,22 +23,19 @@ const MonthlyPurchase = ({ navigation, route }) => {
 
                 let pieChartData = [];
                 let index = 0;
-                for (let cat in data.contents.categories_analysis) {
-                    if (data.contents.categories_analysis[cat]) {
+
+                for (let catInfo of data.contents.category_wise) {
+                    if (catInfo[1]) {
                         let obj = {
-                            name: `$ (${cat})`,
-                            amount: data.contents.categories_analysis[cat],
+                            name: `$ (${catInfo[0]})`,
+                            amount: parseFloat(catInfo[1].toFixed(2)),
                             color: Global.COLORS[index],
                             legendFontColor: '#333',
-                            legendFontSize: 15,
+                            legendFontSize: 12,
                         };
                         pieChartData.push(obj);
                         index++;
-                        if (
-                            index ==
-                            Object.keys(data.contents.categories_analysis)
-                                .length
-                        ) {
+                        if (index == data.contents.category_wise.length) {
                             index = 0;
                         }
                     }

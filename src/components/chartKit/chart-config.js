@@ -5,7 +5,7 @@ export default {
     config: {
         backgroundGradientFromOpacity: 0,
         backgroundGradientToOpacity: 0,
-        color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+        color: (opacity = 1) => `rgba(0, 63, 130, ${opacity})`,
         strokeWidth: 2, // optional, default 3
         barPercentage: 0.5,
         useShadowColorFromDataset: false, // optional
